@@ -5,7 +5,7 @@ create table users (
 		id serial primary key,
   	name text not null,
   	email varchar(50) unique,
-  	password varchar(8)
+  	password text not null
 );
 
 create table categories(
