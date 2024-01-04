@@ -1,15 +1,17 @@
 const express = require('express');
+const { createOrder } = require('./controllers/orders');
 const { createUser, loginUser } = require('./controllers/users');
-const { emailExists, bodyVerify } = require('./middlewares/verify');
+const { emailExists, bodyVerify, userLogged } = require('./middlewares/verify');
 const { schemaUser, schemaLogin } = require('./schema');
 
 const routes = express();
 
 
 routes.get('/', (req, res)=>{
-    return res.json(`Funcionando agora com pasta de rotas na porta ${process.env.PORT}`)
+    
+    return res.json(`Servidor rodando na porta ${process.env.PORT}`)
 })
-
+routes.post('/order', userLogged, createOrder);
 
 
 routes.use(emailExists);

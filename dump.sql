@@ -23,7 +23,7 @@ create table products(
 create table cart(
 	id serial primary key, 
   user_id integer not null, 
-  products_id integer,
+  products_id integer array,
   total_price integer
 );
 
