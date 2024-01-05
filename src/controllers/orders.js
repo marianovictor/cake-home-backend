@@ -13,7 +13,8 @@ async function createOrder(req, res) {
         let orderedProductsQuantities = [];
         let totalPrice = 0;
 
-        order.forEach((product) => {
+
+        for (const product of order) {
             const productExist = productsInStock.find((productInStock) => {
                 if (productInStock.id === product.id) {
                     totalPrice += productInStock.price * product.quantidade;
@@ -25,14 +26,17 @@ async function createOrder(req, res) {
                 wrongProducts.push({ message: `O produto com o id ${product.id} não existe` });
             }
             if (productExist) {
-                orderedProducts.push(product.id);
+                const descripionProduct = await knex("products").where("id", product.id).returning(['desciption']).first();
+                orderedProducts.push(descripionProduct.description);
                 orderedProductsQuantities.push(product.quantidade)
             }
-        })
+        }
 
-        const ordered = await knex('cart').insert({ user_id: user_id, products_id: orderedProducts, total_price: totalPrice, quantities: orderedProductsQuantities }).returning(["products_id", "quantities", "total_price"]);
+        const userName = await knex('users').select("name").where("id", user_id).first();
+
+        const ordered = await knex('cart').insert({ user_name: userName.name, products_description: orderedProducts, total_price: totalPrice, quantities: orderedProductsQuantities }).returning(["products_description", "quantities", "total_price"]);
         return res.json({
-            idCliente: user_id,
+            cliente: userName,
             carrinho: ordered,
             erros: wrongProducts
         })
@@ -41,4 +45,26 @@ async function createOrder(req, res) {
     }
 }
 
-module.exports = { createOrder }
+async function listOrders(req, res) {
+
+    try {
+
+        const orders = await knex("cart")
+            .select("user_name as name", knex.raw("ARRAY_AGG(products_description) as products"),
+                knex.raw("ARRAY_AGG(quantities) as quantities"),
+                knex.raw("ARRAY_AGG(total_price) as Total_price"))
+            .groupBy("user_name");
+
+
+        return res.json(orders);
+
+
+    } catch (error) {
+        return res.json(error.message);
+    }
+}
+
+module.exports = {
+    createOrder,
+    listOrders
+}
