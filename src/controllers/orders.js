@@ -49,13 +49,11 @@ async function listOrders(req, res) {
 
     try {
 
-        const orders = await knex("cart")
-            .select("user_name as name", knex.raw("ARRAY_AGG(products_description) as products"),
-                knex.raw("ARRAY_AGG(quantities) as quantities"),
-                knex.raw("ARRAY_AGG(total_price) as Total_price"))
-            .groupBy("user_name");
-
-
+        const orders = await knex('cart')
+        .select('user_name as nome', 'products_description as pedido', 'quantities as quantidades', 'total_price as valor_total', 'id as id_pedido')
+        
+            
+      
         return res.json(orders);
 
 
