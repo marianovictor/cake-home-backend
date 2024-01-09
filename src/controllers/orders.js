@@ -62,7 +62,32 @@ async function listOrders(req, res) {
     }
 }
 
+
+async function preparingOrder(req, res){
+    const order = req.orderExist;
+    const ordered = order[0];
+    try {
+        
+        if(!ordered){
+            return res.status(404).json({mensagem: "O pedido não existe"});
+        }
+       
+        await knex('preparingorder').insert({user_name: ordered.user_name, products_description: ordered.products_description, total_price: ordered.total_price, quantities: ordered.quantities});
+
+        return res.status(200).json({
+            mensagem: 'Pedido em preparo!',
+            id_pedido: ordered.id,
+            nome_usuario: ordered.user_name,
+            produtos: ordered.products_description,
+            quantidades: ordered.quantities,
+            preco: ordered.total_price
+        })
+    } catch (error) {
+        return res.json(error.message);
+    }
+}
 module.exports = {
     createOrder,
-    listOrders
+    listOrders,
+    preparingOrder
 }

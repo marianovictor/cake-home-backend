@@ -47,8 +47,24 @@ async function userLogged(req, res, next){
     }
 }
 
+async function orderExist(req, res, next){
+    const {id: order_id} = req.body;
+
+    try {
+        const orderExist = await knex("cart").where("id", order_id);
+
+        req.orderExist = orderExist || null;
+            
+        next();
+
+    } catch (error) {
+        return res.json(error.message);
+    }
+}
+
 module.exports = {
     bodyVerify,
     emailExists,
-    userLogged
+    userLogged,
+    orderExist
 }
