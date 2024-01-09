@@ -57,4 +57,12 @@ insert into products (category_id, description, price) values
 (6, 'Bolo de Festa Estupendo', 85)
 ;
 
+create table preparingOrder(
+	id serial primary key, 
+  user_name text not null, 
+  products_description text array,
+  total_price integer,
+  quantities integer array
+);
+
 alter table users add primary key (id);
