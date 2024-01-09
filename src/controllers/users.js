@@ -51,8 +51,19 @@ async function loginUser(req, res) {
     }
 }
 
+async function listOrdersUser(req, res){
+    const user =  req.user;
+    try {
+        
+        const orders = await knex('cart').where("user_name", user.name);
+        return res.status(200).json(orders);
+    } catch (error) {
+        return res.json(error.message);
+    }
+}
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    listOrdersUser
 }

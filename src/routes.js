@@ -1,22 +1,28 @@
 const express = require('express');
 const { createOrder, listOrders, preparingOrder, listPreparingOrders } = require('./controllers/orders');
 const { listProducts } = require('./controllers/products');
-const { createUser, loginUser } = require('./controllers/users');
+const { createUser, loginUser, listOrdersUser } = require('./controllers/users');
 const { emailExists, bodyVerify, userLogged, orderExist } = require('./middlewares/verify');
 const { schemaUser, schemaLogin } = require('./schema');
 
 const routes = express();
 
 
-routes.get('/', (req, res)=>{
-    
+routes.get('/', (req, res) => {
+
     return res.json(`Servidor rodando na porta ${process.env.PORT}`)
 })
 routes.post('/order', userLogged, createOrder);
+
 routes.get('/listOrders', listOrders);
-routes.get('/listProducts', listProducts)
-routes.get('/listPreparingOrders', listPreparingOrders)
-routes.get('/preparingOrder', orderExist, preparingOrder);
+
+routes.get('/listProducts', listProducts);
+
+routes.get('/listPreparingOrders', listPreparingOrders);
+
+routes.post('/preparingOrder', orderExist, preparingOrder);
+
+routes.get('/listOrdersUser', userLogged, listOrdersUser)
 
 
 routes.use(emailExists);
