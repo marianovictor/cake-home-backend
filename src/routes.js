@@ -1,5 +1,5 @@
 const express = require('express');
-const { createOrder, listOrders, preparingOrder } = require('./controllers/orders');
+const { createOrder, listOrders, preparingOrder, listPreparingOrders } = require('./controllers/orders');
 const { listProducts } = require('./controllers/products');
 const { createUser, loginUser } = require('./controllers/users');
 const { emailExists, bodyVerify, userLogged, orderExist } = require('./middlewares/verify');
@@ -15,6 +15,7 @@ routes.get('/', (req, res)=>{
 routes.post('/order', userLogged, createOrder);
 routes.get('/listOrders', listOrders);
 routes.get('/listProducts', listProducts)
+routes.get('/listPreparingOrders', listPreparingOrders)
 routes.get('/preparingOrder', orderExist, preparingOrder);
 
 

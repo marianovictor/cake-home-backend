@@ -61,7 +61,22 @@ async function listOrders(req, res) {
         return res.json(error.message);
     }
 }
+async function listPreparingOrders(req, res) {
 
+    try {
+
+        const orders = await knex('preparingorder')
+        .select('user_name as nome', 'products_description as pedido', 'quantities as quantidades', 'total_price as valor_total', 'id as id_pedido')
+        
+            
+      
+        return res.json(orders);
+
+
+    } catch (error) {
+        return res.json(error.message);
+    }
+}
 
 async function preparingOrder(req, res){
     const order = req.orderExist;
@@ -89,5 +104,6 @@ async function preparingOrder(req, res){
 module.exports = {
     createOrder,
     listOrders,
-    preparingOrder
+    preparingOrder,
+    listPreparingOrders
 }
