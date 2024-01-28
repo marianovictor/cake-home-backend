@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY
 
 async function createUser(req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, phone, password } = req.body;
     const userExists = req.userExists;
     
     try {
@@ -13,7 +13,7 @@ async function createUser(req, res) {
         }
         const encryptedPassword = await bcrypt.hash(password, 10);
 
-        const user = await knex('users').insert({ name, email, password: encryptedPassword }).returning(["name", "email"]);
+        const user = await knex('users').insert({ name, email, phone, password: encryptedPassword }).returning(["name", "email"]);
         return res.status(200).json(user);
 
     } catch (error) {
